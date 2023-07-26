@@ -5,7 +5,6 @@ from uvicorn import run
 
 from utils import APISettings, open_image, encode_image_for_json, do_something
 
-cv_pipeline = Pipeline()
 app = FastAPI(
     title=APISettings.NAME.value, debug=False, version=APISettings.VERSION.value
 )
