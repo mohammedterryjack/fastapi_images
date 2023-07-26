@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from uvicorn import run
 
-from face_numberplate.pipeline import Pipeline
-from face_numberplate.utils import APISettings, encode_image_for_json, open_image
+from utils import APISettings, open_image, encode_image_for_json, do_something
 
 cv_pipeline = Pipeline()
 app = FastAPI(
@@ -19,24 +18,24 @@ app.add_middleware(
 )
 
 
-@app.get(path="/", description="upload and obscure an image manually")
+@app.get(path="/", description="upload and modify an image manually")
 async def root() -> dict:
     return HTMLResponse(content=APISettings.ROOT_HTML.value)
 
 
-@app.post(path="/upload/image/", description="upload and obscure an image")
+@app.post(path="/upload/image/", description="upload and modify an image")
 async def upload_image(file: UploadFile) -> dict:
     try:
         image_bytes = await file.read()
         image_data = open_image(image_bytes)
-        image_blurred = cv_pipeline.obscure_image(image=image_data)
-        image_blurred_encoded = encode_image_for_json(image=image_blurred)
+        image_modified = do_something(image=image_data)
+        image_modified_encoded = encode_image_for_json(image=image_modified)
 
         return {
             APISettings.RESPONSE_FILENAME.value: file.filename,
             APISettings.RESPONSE_FILETYPE.value: file.content_type,
             APISettings.RESPONSE_CONTENTTYPE.value: APISettings.RESPONSE_CONTENT.value,
-            APISettings.RESPONSE_CONTENT.value: image_blurred_encoded,
+            APISettings.RESPONSE_CONTENT.value: image_modified_encoded,
         }
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"Error: {error}")
