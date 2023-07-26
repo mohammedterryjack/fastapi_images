@@ -9,6 +9,8 @@ from PIL import Image
 class APISettings(Enum):
     NAME = "FaceNumberplate"
     VERSION = "1.0.0"
+    HOST = "127.0.0.1"
+    PORT = 5000
     ROOT_HTML = """<body></form>
 <form action="/upload/image/" enctype="multipart/form-data" method="post">
 <input name="file" type="file" multiple>
