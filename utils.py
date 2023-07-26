@@ -34,3 +34,8 @@ def encode_image_for_json(image: ndarray, image_type: str = "PNG") -> str:
     image_.save(buffer, format=image_type)
     image_bytes = buffer.getvalue()
     return b64encode(image_bytes).decode()
+
+
+def do_something(image:ndarray) -> ndarray:
+    #TODO: custom logic to manipulate image here
+    return image
